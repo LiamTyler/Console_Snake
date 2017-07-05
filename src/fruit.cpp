@@ -1,4 +1,5 @@
 #include "include/fruit.h"
+#include <algorithm>
 
 Fruit::Fruit(char symbol, int value) : Fruit(symbol, value, 0, 0, 0, 0) {}
 
@@ -8,7 +9,7 @@ Fruit::Fruit(char symbol, int value, int x, int y, int vx, int vy) :
 void Fruit::Init(WindowManager* win) {
     do {
         x_ = rand() % win->ScreenWidth();
-        y_ = rand() % win->ScreenHeight();
+        y_ = std::max(rand() % win->ScreenHeight(), win->TBorder());
     } while (win->GetChar(x_, y_) != ' ');
 
     Draw(win);

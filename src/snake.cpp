@@ -6,6 +6,9 @@ Snake::Snake(char symbol, int x, int y, int vx, int vy) :
     Moveable(x, y, vx, vy) {
 
     symbol_ = symbol;
+    grow_ = 0;
+    size_ = 1;
+    segments_.push_back(vec2(x, y));
 }
 
 bool Snake::ProcessInput(int key_code) {
@@ -13,23 +16,31 @@ bool Snake::ProcessInput(int key_code) {
     switch( key_code ) {
         case 'w':
         case KEY_UP:
-            vx_ = 0;
-            vy_ = -1;
+            if (vy_ != 1) {
+                vx_ = 0;
+                vy_ = -1;
+            }
             break;
         case 's':
         case KEY_DOWN:
-            vx_ = 0;
-            vy_ = 1;
+            if (vy_ != -1) {
+                vx_ = 0;
+                vy_ = 1;
+            }
             break;
         case 'a':
         case KEY_LEFT:
-            vx_ = -1;
-            vy_ = 0;
+            if (vx_ != 1) {
+                vx_ = -1;
+                vy_ = 0;
+            }
             break;
         case 'd':
         case KEY_RIGHT:
-            vx_ = 1;
-            vy_ = 0;
+            if (vx_ != -1) {
+                vx_ = 1;
+                vy_ = 0;
+            }
             break;
         case 'q':
             quit = true;
@@ -39,22 +50,46 @@ bool Snake::ProcessInput(int key_code) {
     return quit;
 }
 
+void Snake::Erase(WindowManager* win) {
+    for (int i = 0; i < size_; i++) {
+        win->PrintChar(' ', segments_[i].x, segments_[i].y);
+    }
+}
+
 void Snake::Draw(WindowManager* win) {
-    win->PrintChar(symbol_, x_, y_);
+    for (int i = 0; i < size_; i++) {
+        win->PrintChar(symbol_, segments_[i].x, segments_[i].y);
+    }
+}
+
+void Snake::AddSegment() {
+    segments_.push_back(segments_[size_ - 1]);
+    grow_--;
+    size_++;
 }
 
 bool Snake::Update(WindowManager* win) {
     // Erase old position
-    win->PrintChar(' ', x_, y_);
+    if (grow_) {
+        AddSegment();
+    }
+    Erase(win);
 
     // Update velocities if a key was pressed
     bool gameover = ProcessInput(win->GetInput());
 
     // Update position
-    Moveable::UpdatePosition();
+    for (int i = size_ - 2; i >= 0; i--) {
+        segments_[i + 1] = segments_[i];
+    }
+    segments_[0].x += vx_;
+    segments_[0].y += vy_;
+    if (win->GetChar(segments_[0].x, segments_[0].y) != ' ')
+        gameover = true;
 
     // Draw new position
     Draw(win);
+    grow_ = false;
 
     if (!(win->LBorder() < x_ && x_ < win->RBorder() &&
           win->TBorder() < y_ && y_ < win->BBorder()))
