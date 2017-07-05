@@ -9,7 +9,7 @@ Fruit::Fruit(char symbol, int value, int x, int y, int vx, int vy) :
 void Fruit::Init(WindowManager* win) {
     do {
         x_ = rand() % win->ScreenWidth();
-        y_ = std::max(rand() % win->ScreenHeight(), win->TBorder());
+        y_ = std::max(rand() % win->ScreenHeight(), 1+ win->TBorder());
     } while (win->GetChar(x_, y_) != ' ');
 
     Draw(win);

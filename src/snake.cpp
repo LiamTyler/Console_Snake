@@ -73,10 +73,15 @@ bool Snake::Update(WindowManager* win) {
     if (grow_) {
         AddSegment();
     }
-    Erase(win);
-
     // Update velocities if a key was pressed
     bool gameover = ProcessInput(win->GetInput());
+
+    // Detect collision with self
+    if (win->GetChar(segments_[0].x + vx_, segments_[0].y + vy_) == symbol_)
+        gameover = true;
+
+    Erase(win);
+
 
     // Update position
     for (int i = size_ - 2; i >= 0; i--) {
@@ -84,12 +89,11 @@ bool Snake::Update(WindowManager* win) {
     }
     segments_[0].x += vx_;
     segments_[0].y += vy_;
-    if (win->GetChar(segments_[0].x, segments_[0].y) != ' ')
+    if (win->GetChar(segments_[0].x, segments_[0].y) == symbol_)
         gameover = true;
 
     // Draw new position
     Draw(win);
-    grow_ = false;
 
     if (!(win->LBorder() < x_ && x_ < win->RBorder() &&
           win->TBorder() < y_ && y_ < win->BBorder()))
