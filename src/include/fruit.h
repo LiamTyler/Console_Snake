@@ -9,6 +9,7 @@ class Fruit : public Moveable {
   Fruit(char symbol, int value);
   Fruit(char symbol, int value, int x, int y, int vx, int vy);
   void Init(WindowManager* win);
+  void Destroy(WindowManager* win);
   void Update(WindowManager* win);
   void Draw(WindowManager* win);
   char GetSymbol() { return symbol_; }

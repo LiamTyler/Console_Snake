@@ -61,6 +61,7 @@ void Game::HandleCollisions() {
     if (fruit_->X() == snake_->X() && fruit_->Y() == snake_->Y()) {
         snake_->Grow(4);
         score_ += fruit_->GetValue();
+        fruit_->Destroy(win_);
         delete fruit_;
         fruit_ = new Fruit('F', 10);
         snake_->Draw(win_);

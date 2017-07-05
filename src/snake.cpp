@@ -82,15 +82,14 @@ bool Snake::Update(WindowManager* win) {
 
     Erase(win);
 
-
     // Update position
     for (int i = size_ - 2; i >= 0; i--) {
         segments_[i + 1] = segments_[i];
     }
     segments_[0].x += vx_;
     segments_[0].y += vy_;
-    if (win->GetChar(segments_[0].x, segments_[0].y) == symbol_)
-        gameover = true;
+    x_ = segments_[0].x;
+    y_ = segments_[0].y;
 
     // Draw new position
     Draw(win);

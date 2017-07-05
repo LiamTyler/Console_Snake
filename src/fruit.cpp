@@ -15,6 +15,11 @@ void Fruit::Init(WindowManager* win) {
     Draw(win);
 }
 
+void Fruit::Destroy(WindowManager* win) {
+    // Default: Do nothing when a fruit is eaten
+    win->FPS(win->FPS() + 5);
+}
+
 void Fruit::Draw(WindowManager* win) {
     win->PrintChar(symbol_, x_, y_);
 }
