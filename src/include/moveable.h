@@ -1,13 +1,16 @@
 #ifndef SRC_INCLUDE_MOVEABLE_H_
 #define SRC_INCLUDE_MOVEABLE_H_
 
-#include <iostream>
-
 class Moveable {
     public:
         Moveable() : Moveable(0,0,0,0) {}
         Moveable(int x, int y, int vx, int vy) :
             x_(x), y_(y), vx_(vx), vy_(vy) {}
+
+        void UpdatePosition() {
+            x_ += vx_;
+            y_ += vy_;
+        }
 
         int VX() { return vx_; }
         int VY() { return vy_; }

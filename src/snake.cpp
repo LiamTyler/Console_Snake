@@ -39,6 +39,10 @@ bool Snake::ProcessInput(int key_code) {
     return quit;
 }
 
+void Snake::Draw(WindowManager& win) {
+    win.PrintChar(symbol_, x_, y_);
+}
+
 bool Snake::Update(WindowManager& win) {
     // Erase old position
     win.PrintChar(' ', x_, y_);
@@ -47,11 +51,10 @@ bool Snake::Update(WindowManager& win) {
     bool gameover = ProcessInput(win.GetInput());
 
     // Update position
-    x_ += vx_;
-    y_ += vy_;
+    Moveable::UpdatePosition();
 
     // Draw new position
-    win.PrintChar(symbol_, x_, y_);
+    Draw(win);
 
     return gameover;
 }

@@ -9,6 +9,7 @@ class Snake : public Moveable {
         Snake();
         Snake(char symbol, int x, int y, int vx, int vy);
         bool Update(WindowManager& win);
+        void Draw(WindowManager& win);
         bool ProcessInput(int key_code);
         char GetSymbol() { return symbol_; }
 
