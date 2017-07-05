@@ -1,6 +1,6 @@
 #include "include/snake.h"
 
-Snake::Snake() : Snake('O', 1, 1, 1, 0) {}
+Snake::Snake() : Snake('O', 1, 10, 1, 0) {}
 
 Snake::Snake(char symbol, int x, int y, int vx, int vy) :
     Moveable(x, y, vx, vy) {
@@ -39,22 +39,26 @@ bool Snake::ProcessInput(int key_code) {
     return quit;
 }
 
-void Snake::Draw(WindowManager& win) {
-    win.PrintChar(symbol_, x_, y_);
+void Snake::Draw(WindowManager* win) {
+    win->PrintChar(symbol_, x_, y_);
 }
 
-bool Snake::Update(WindowManager& win) {
+bool Snake::Update(WindowManager* win) {
     // Erase old position
-    win.PrintChar(' ', x_, y_);
+    win->PrintChar(' ', x_, y_);
 
     // Update velocities if a key was pressed
-    bool gameover = ProcessInput(win.GetInput());
+    bool gameover = ProcessInput(win->GetInput());
 
     // Update position
     Moveable::UpdatePosition();
 
     // Draw new position
     Draw(win);
+
+    if (!(win->LBorder() < x_ && x_ < win->RBorder() &&
+          win->TBorder() < y_ && y_ < win->BBorder()))
+        gameover = true;
 
     return gameover;
 }

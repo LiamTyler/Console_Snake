@@ -9,7 +9,7 @@ class WindowManager {
     public:
         // Initialization
         WindowManager();
-        WindowManager(int width, int height, double fps);
+        WindowManager(int height, int width, double fps);
         ~WindowManager();
 
         // Manipulating the Screen
@@ -21,20 +21,29 @@ class WindowManager {
         int GetInput();  // returns the key code of a key pressed
         void StartFrame();
         void EndFrame();
+        WINDOW* GetWindow() { return window_; }
 
         int ScreenWidth() { return screen_w_; }
         int ScreenHeight() { return screen_h_; }
         // void Resize(int w, int h);
         void FPS(double FPS) { fps_ = FPS; }
         double FPS() { return fps_; }
+        int LBorder() { return lborder_; }
+        int RBorder() { return rborder_; }
+        int TBorder() { return tborder_; }
+        int BBorder() { return bborder_; }
 
     private:
         int screen_w_;
         int screen_h_;
+        int lborder_;
+        int rborder_;
+        int tborder_;
+        int bborder_;
         WINDOW* window_;
         double fps_;
 
-        std::chrono::system_clock::time_point start_;
+        std::chrono::steady_clock::time_point start_;
 };
 
 #endif  // WINDOW_MANAGER_H_

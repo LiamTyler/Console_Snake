@@ -1,15 +1,20 @@
 #include "include/window.h"
+#include <string>
 
 using namespace std;
 
-WindowManager::WindowManager() : WindowManager(24, 100, 5) {}
+WindowManager::WindowManager() : WindowManager(24, 80, 8) {}
 
-WindowManager::WindowManager(int width, int height, double fps) {
+WindowManager::WindowManager(int height, int width, double fps) {
     screen_w_ = width;
     screen_h_ = height;
+    lborder_ = 0;
+    rborder_ = width;
+    tborder_ = 2;
+    bborder_ = height;
     fps_ = fps;
     initscr();
-    window_ = newwin(width, height, 0, 0);
+    window_ = newwin(height, width, 0, 0);
     box(window_, 0, 0);
 
     wrefresh(window_); // update the terminal screen
@@ -50,14 +55,16 @@ int WindowManager::GetInput() {
 }
 
 void WindowManager::StartFrame() {
-    start_ = chrono::system_clock::now();
+    start_ = chrono::steady_clock::now();
 }
 
 void WindowManager::EndFrame() {
     wrefresh(window_);
     fflush(stdout);
-    chrono::duration<double> time_taken = chrono::system_clock::now() - start_;
-    while (time_taken.count() < 1.0 / fps_) {
-        time_taken = chrono::system_clock::now() - start_;
+    double time_taken = chrono::duration_cast<chrono::microseconds>
+        (chrono::steady_clock::now() - start_).count() / 1000000.0;
+    while (time_taken < 1.0 / fps_) {
+        time_taken = chrono::duration_cast<chrono::microseconds>
+            (chrono::steady_clock::now() - start_).count() / 1000000.0;
     }
 }
