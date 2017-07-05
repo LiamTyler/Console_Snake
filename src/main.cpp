@@ -7,22 +7,11 @@ int main() {
     WindowManager w;
     Snake s;
 
-    int ch;
-    int vx, vy;
-
+    bool gameover = false;
     // get the input
-    while(( ch = w.GetInput()) != 'q'){ 
+    while(!gameover) { 
         w.StartFrame();
-
-        w.PrintChar(' ', s.X(), s.Y());
-        // right pad with spaces to make the items appear with even width.
-        if (ch != ERR) {
-            w.GetVelocities(ch, vx, vy);
-            s.VX(vx);
-            s.VY(vy);
-        }
-        s.Update();
-        w.PrintChar(s.GetSymbol(), s.X(), s.Y());
+        gameover = s.Update(w);
         w.EndFrame();
     }
 

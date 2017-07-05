@@ -49,33 +49,6 @@ int WindowManager::GetInput() {
     return wgetch(window_);
 }
 
-void WindowManager::GetVelocities(int ch, int& vx, int& vy) {
-    switch( ch ) {
-        case 'w':
-        case KEY_UP:
-            vx = 0;
-            vy = -1;
-            break;
-        case 's':
-        case KEY_DOWN:
-            vx = 0;
-            vy = 1;
-            break;
-        case 'a':
-        case KEY_LEFT:
-            vx = -1;
-            vy = 0;
-            break;
-        case 'd':
-        case KEY_RIGHT:
-            vx = 1;
-            vy = 0;
-            break;
-        default:
-            break;
-    }
-}
-
 void WindowManager::StartFrame() {
     start_ = chrono::system_clock::now();
 }

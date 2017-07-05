@@ -19,7 +19,6 @@ class WindowManager {
         int GetChar(int x, int y);
         void ClearScreen();
         int GetInput();  // returns the key code of a key pressed
-        void GetVelocities(int ch, int& vx, int& vy);
         void StartFrame();
         void EndFrame();
 
