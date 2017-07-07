@@ -1,10 +1,14 @@
 #ifndef SRC_INCLUDE_SNAKE_H_
 #define SRC_INCLUDE_SNAKE_H_
 
-#include "include/window.h"
+#include "include/window_manager.h"
 #include "include/moveable.h"
 #include <vector>
 
+/* Brief: This struct is just for keeping track of the position of
+ *        each segment of the snake. All it has are x, y member variables
+ *        to keep track of which column / row the snake is on.
+ */
 typedef struct vec2 {
     vec2() {
         x = 0;
@@ -18,25 +22,29 @@ typedef struct vec2 {
     int y;
 } vec2;
 
+/* Brief: Snake
+ */
 class Snake : public Moveable {
     public:
         Snake();
-        Snake(char symbol, int x, int y, int vx, int vy);
-        bool Update(WindowManager* win);
+        Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy);
+        bool Update(WindowManager* win, int key_code);
         void Draw(WindowManager* win);
         void Erase(WindowManager* win);
         void AddSegment();
-        bool ProcessInput(int key_code);
-        char GetSymbol() { return symbol_; }
+        void ProcessInput(int key_code);
+        char GetHeadSymbol() { return h_symbol_; }
+        char GetBodySymbol() { return b_symbol_; }
         void Grow(int g) { grow_ += g; }
+        int Score() { return score_; }
+        void Score(int s) { score_ = s; }
 
-        int X() { return segments_[0].x; }
-        int Y() { return segments_[0].y; }
-
-    private:
-        char symbol_;
+    protected:
+        char h_symbol_;
+        char b_symbol_;
         int grow_;
         int size_;
+        int score_;
         std::vector<vec2> segments_;
 };
 

@@ -1,7 +1,7 @@
 #ifndef SRC_INCLUDE_GAME_H_
 #define SRC_INCLUDE_GAME_H_
 
-#include "include/window.h"
+#include "include/window_manager.h"
 #include "include/snake.h"
 #include "include/fruit.h"
 #include <chrono>

@@ -1,18 +1,20 @@
 #include "include/snake.h"
+#include <iostream>
 
-Snake::Snake() : Snake('O', 1, 10, 1, 0) {}
+Snake::Snake() : Snake('O', 'o', 1, 10, 1, 0) {}
 
-Snake::Snake(char symbol, int x, int y, int vx, int vy) :
+Snake::Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy) :
     Moveable(x, y, vx, vy) {
 
-    symbol_ = symbol;
-    grow_ = 0;
-    size_ = 1;
-    segments_.push_back(vec2(x, y));
+    score_ = 0;
+    h_symbol_ = head_symbol;
+    b_symbol_ = body_symbol;
+    grow_ = 0;  // Snake isn't growing until it eats some fruit
+    size_ = 1;  // Snake starts with only a head
+    segments_.push_back(vec2(x, y));  // Only has one segment (head)
 }
 
-bool Snake::ProcessInput(int key_code) {
-    bool quit = false;
+void Snake::ProcessInput(int key_code) {
     switch( key_code ) {
         case 'w':
         case KEY_UP:
@@ -42,12 +44,10 @@ bool Snake::ProcessInput(int key_code) {
                 vy_ = 0;
             }
             break;
-        case 'q':
-            quit = true;
+        // If another key (or no key was pressed)
         default:
             break;
     }
-    return quit;
 }
 
 void Snake::Erase(WindowManager* win) {
@@ -57,8 +57,9 @@ void Snake::Erase(WindowManager* win) {
 }
 
 void Snake::Draw(WindowManager* win) {
-    for (int i = 0; i < size_; i++) {
-        win->PrintChar(symbol_, segments_[i].x, segments_[i].y);
+    win->PrintChar(h_symbol_, segments_[0].x, segments_[0].y);
+    for (int i = 1; i < size_; i++) {
+        win->PrintChar(b_symbol_, segments_[i].x, segments_[i].y);
     }
 }
 
@@ -68,34 +69,40 @@ void Snake::AddSegment() {
     size_++;
 }
 
-bool Snake::Update(WindowManager* win) {
-    // Erase old position
+bool Snake::Update(WindowManager* win, int key_code) {
+    bool gameover = false;
+
+    // Add a single segment if we are currently growing
     if (grow_) {
         AddSegment();
     }
     // Update velocities if a key was pressed
-    bool gameover = ProcessInput(win->GetInput());
+    ProcessInput(key_code);
 
     // Detect collision with self
-    if (win->GetChar(segments_[0].x + vx_, segments_[0].y + vy_) == symbol_)
+    if (win->GetChar(segments_[0].x + vx_, segments_[0].y + vy_) == b_symbol_)
         gameover = true;
 
+    // Erase the old snake off the screen before we draw its new position
     Erase(win);
 
-    // Update position
+    // Update the snake body position.
+    // Each Segment(i+1) = Segment(i), besides the head
     for (int i = size_ - 2; i >= 0; i--) {
         segments_[i + 1] = segments_[i];
     }
+    // Update the snake head position
     segments_[0].x += vx_;
     segments_[0].y += vy_;
     x_ = segments_[0].x;
     y_ = segments_[0].y;
 
-    // Draw new position
+    // Draw the snake with its new position
     Draw(win);
 
-    if (!(win->LBorder() < x_ && x_ < win->RBorder() &&
-          win->TBorder() < y_ && y_ < win->BBorder()))
+    // Detect if it hit the edges of the map
+    if (!(win->LBorder() < x_ && x_ < win->RBorder() - 1 &&
+          win->TBorder() < y_ && y_ < win->BBorder() - 1))
         gameover = true;
 
     return gameover;

@@ -11,6 +11,7 @@ class WindowManager {
         WindowManager();
         WindowManager(int height, int width, double fps);
         ~WindowManager();
+        void InitColors();
 
         // Manipulating the Screen
         void PrintChar(char ch, int x, int y);
@@ -21,8 +22,11 @@ class WindowManager {
         int GetInput();  // returns the key code of a key pressed
         void StartFrame();
         void EndFrame();
-        WINDOW* GetWindow() { return window_; }
+        void Pause();
+        void StartColor(unsigned color);
+        void StopColor(unsigned color);
 
+        WINDOW* GetWindow() { return window_; }
         int ScreenWidth() { return screen_w_; }
         int ScreenHeight() { return screen_h_; }
         // void Resize(int w, int h);

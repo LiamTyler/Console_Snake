@@ -1,10 +1,12 @@
 #include "include/fruit.h"
 #include <algorithm>
+#include <ncurses.h>
 
-Fruit::Fruit(char symbol, int value) : Fruit(symbol, value, 0, 0, 0, 0) {}
+Fruit::Fruit() : Fruit('F', 10, COLOR_RED, 0, 0) {}
 
-Fruit::Fruit(char symbol, int value, int x, int y, int vx, int vy) :
-             symbol_(symbol), value_(value), Moveable(x, y, vx, vy) {}
+Fruit::Fruit(char symbol, int value, unsigned c, int x, int y) :
+             symbol_(symbol), value_(value), color_(c),
+             Moveable(x, y, 0, 0) {}
 
 void Fruit::Init(WindowManager* win) {
     do {
@@ -15,13 +17,16 @@ void Fruit::Init(WindowManager* win) {
     Draw(win);
 }
 
-void Fruit::Destroy(WindowManager* win) {
-    // Default: Do nothing when a fruit is eaten
-    win->FPS(win->FPS() + 5);
+void Fruit::Destroy(WindowManager* win, Snake* snake) {
+    snake->Score(snake->Score() + GetValue());
+    snake->Grow(3);
 }
 
 void Fruit::Draw(WindowManager* win) {
+    WINDOW* w = win->GetWindow();
+    win->StartColor(color_);
     win->PrintChar(symbol_, x_, y_);
+    win->StopColor(color_);
 }
 
 void Fruit::Update(WindowManager* win) {

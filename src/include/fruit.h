@@ -2,22 +2,25 @@
 #define SRC_INCLUDE_FRUIT_H_
 
 #include "include/moveable.h"
-#include "include/window.h"
+#include "include/window_manager.h"
+#include "include/snake.h"
 
 class Fruit : public Moveable {
- public:
-  Fruit(char symbol, int value);
-  Fruit(char symbol, int value, int x, int y, int vx, int vy);
-  void Init(WindowManager* win);
-  void Destroy(WindowManager* win);
-  void Update(WindowManager* win);
-  void Draw(WindowManager* win);
-  char GetSymbol() { return symbol_; }
-  int GetValue() { return value_; }
+    public:
+        Fruit();
+        Fruit(char symbol, int value, unsigned color, int x, int y);
+        virtual void Init(WindowManager* win);
+        virtual void Destroy(WindowManager* win, Snake* snake);
+        virtual void Draw(WindowManager* win);
+        virtual void Update(WindowManager* win);
+        char GetSymbol() { return symbol_; }
+        int GetValue() { return value_; }
+        unsigned GetColor() { return color_; }
 
- private:
-  char symbol_;
-  int value_;
+    protected:
+        unsigned color_;
+        char symbol_;
+        int value_;
 
 };
 
