@@ -24,15 +24,15 @@ typedef struct vec2 {
 
 /* Brief: Snake
  */
-class Snake : public Moveable {
+class Snake : virtual public Moveable {
     public:
         Snake();
         Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy);
-        bool Update(WindowManager* win, int key_code);
-        void Draw(WindowManager* win);
-        void Erase(WindowManager* win);
-        void AddSegment();
-        void ProcessInput(int key_code);
+        virtual bool Update(WindowManager* win, int key_code);
+        virtual void Draw(WindowManager* win);
+        virtual void Erase(WindowManager* win);
+        virtual void AddSegment();
+        virtual void ProcessInput(int key_code);
         char GetHeadSymbol() { return h_symbol_; }
         char GetBodySymbol() { return b_symbol_; }
         void Grow(int g) { grow_ += g; }

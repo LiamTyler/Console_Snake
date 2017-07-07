@@ -4,12 +4,18 @@
 #include "include/snake.h"
 #include "include/fruit.h"
 
-class SnakeFruit : public Snake, Fruit {
- public:
-  SnakeFruit() {}
+class SnakeFruit : public Snake, public Fruit {
+    public:
+        SnakeFruit();
+        virtual void Init(WindowManager* win);
+        virtual void Update(WindowManager* win);
+        virtual void GotoTarget(WindowManager* win);
+        void SetTarget(Fruit* t) { target_ = t; }
+        bool Dead() { return dead_; }
 
- private:
-
+    protected:
+        Fruit* target_;
+        bool dead_;
 };
 
 #endif  // SRC_INCLUDE_SNAKE_FRUIT_H_

@@ -4,6 +4,7 @@
 #include "include/window_manager.h"
 #include "include/snake.h"
 #include "include/fruit.h"
+#include "include/snake_fruit.h"
 #include <chrono>
 
 class Game {
@@ -20,6 +21,7 @@ class Game {
         WindowManager* win_;
         Snake* snake_;
         Fruit* fruit_;
+        SnakeFruit* sf_;
         bool gameover_;
         int score_;
 

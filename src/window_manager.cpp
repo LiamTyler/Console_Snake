@@ -3,7 +3,7 @@
 
 using namespace std;
 
-WindowManager::WindowManager() : WindowManager(24, 100, 14) {}
+WindowManager::WindowManager() : WindowManager(24, 100, 25) {}
 
 WindowManager::WindowManager(int height, int width, double fps) {
     screen_w_ = width;
@@ -13,6 +13,7 @@ WindowManager::WindowManager(int height, int width, double fps) {
     tborder_ = 2;  // Leave room for the header
     bborder_ = height;
     fps_ = fps;
+    flip_ = false;
     initscr();
     window_ = newwin(height, width, 0, 0);
     InitColors();
@@ -57,6 +58,15 @@ void WindowManager::InitColors() {
 // Pause the game until the user presses 'p'
 void WindowManager::Pause() {
     while (wgetch(window_) != 'p');
+}
+
+void WindowManager::FlipSpeed() {
+    if (flip_) {
+        fps_ = 45;
+    } else {
+        fps_ = 5;
+    }
+    flip_ = !flip_;
 }
 
 /* Change the color of whatever you print until 'StopColor' is called.

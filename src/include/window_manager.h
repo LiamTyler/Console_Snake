@@ -23,6 +23,7 @@ class WindowManager {
         void StartFrame();
         void EndFrame();
         void Pause();
+        void FlipSpeed();
         void StartColor(unsigned color);
         void StopColor(unsigned color);
 
@@ -46,6 +47,7 @@ class WindowManager {
         int bborder_;
         WINDOW* window_;
         double fps_;
+        bool flip_;
 
         std::chrono::steady_clock::time_point start_;
 };

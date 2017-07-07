@@ -5,7 +5,7 @@
 #include "include/window_manager.h"
 #include "include/snake.h"
 
-class Fruit : public Moveable {
+class Fruit : virtual public Moveable {
     public:
         Fruit();
         Fruit(char symbol, int value, unsigned color, int x, int y);
