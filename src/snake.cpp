@@ -14,6 +14,7 @@ Snake::Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy) :
     segments_.push_back(vec2(x, y));  // Only has one segment (head)
 }
 
+// Updates the velocities according to the user input (if any)
 void Snake::ProcessInput(int key_code) {
     switch( key_code ) {
         case 'w':
@@ -63,26 +64,18 @@ void Snake::Draw(WindowManager* win) {
     }
 }
 
+void Snake::EatFruit(Fruit* fruit, WindowManager* win) {
+    Grow(4);
+    score_ += fruit->Destroy(win);
+}
+
 void Snake::AddSegment() {
     segments_.push_back(segments_[size_ - 1]);
     grow_--;
     size_++;
 }
 
-bool Snake::Update(WindowManager* win, int key_code) {
-    bool gameover = false;
-
-    // Add a single segment if we are currently growing
-    if (grow_) {
-        AddSegment();
-    }
-    // Update velocities if a key was pressed
-    ProcessInput(key_code);
-
-    // Detect collision with self
-    if (win->GetChar(segments_[0].x + vx_, segments_[0].y + vy_) == b_symbol_)
-        gameover = true;
-
+void Snake::UpdatePosition(WindowManager* win) {
     // Erase the old snake off the screen before we draw its new position
     Erase(win);
 
@@ -99,11 +92,51 @@ bool Snake::Update(WindowManager* win, int key_code) {
 
     // Draw the snake with its new position
     Draw(win);
+}
 
-    // Detect if it hit the edges of the map
-    if (!(win->LBorder() < x_ && x_ < win->RBorder() - 1 &&
-          win->TBorder() < y_ && y_ < win->BBorder() - 1))
-        gameover = true;
+// Returns true if the snake is within the window borders
+bool Snake::InBounds(WindowManager* win) {
+    return (win->LBorder() < x_ && x_ < win->RBorder() - 1 &&
+          win->TBorder() < y_ && y_ < win->BBorder() - 1);
+}
 
-    return gameover;
+// Returns true if the snake heads collided
+// Note: Have to account for snake heads going "through" each other
+bool Snake::HitHead(Snake* s) {
+    if (!s)
+        return false;
+
+    int sx = s->X();
+    int sy = s->Y();
+    if (x_ == sx && y_ == sy)
+        return true;
+
+    int oldx = x_ - vx_;
+    int oldy = y_ - vy_;
+    if (oldx == sx && oldy == sy &&
+        (vx_ == -s->VX() && vy_ == -s->VY()))
+        return true;
+
+    return false;
+}
+
+// Returns true if a given point is within the snake's body
+bool Snake::BodyContains(int x, int y) {
+    for (int i = 1; i < segments_.size(); i++) {
+        if (segments_[i].x == x && segments_[i].y == y)
+            return true;
+    }
+    return false;
+}
+
+void Snake::Update(WindowManager* win, int key_code) {
+    // Add a single segment if we are currently growing
+    if (grow_) {
+        AddSegment();
+    }
+    // Update velocities if a key was pressed
+    ProcessInput(key_code);
+
+    // Update our position and draw the new snake
+    UpdatePosition(win);
 }

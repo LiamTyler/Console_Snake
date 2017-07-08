@@ -9,8 +9,10 @@ class SnakeFruit : public Snake, public Fruit {
         SnakeFruit();
         virtual void Init(WindowManager* win);
         virtual void Update(WindowManager* win);
+        virtual int Destroy(WindowManager* win);
+        virtual void EatFruit(Fruit* fruit, WindowManager* win);
         virtual void GotoTarget(WindowManager* win);
-        void SetTarget(Fruit* t) { target_ = t; }
+        virtual void SetTarget(Fruit* f) { target_ = f; }
         bool Dead() { return dead_; }
 
     protected:

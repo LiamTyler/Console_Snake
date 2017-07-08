@@ -7,6 +7,12 @@
 #include "include/snake_fruit.h"
 #include <chrono>
 
+enum {
+    PLAIN,
+    MOVING,
+    TOTAL_FRUITS
+};
+
 class Game {
     public:
         Game();
@@ -15,6 +21,7 @@ class Game {
         void UpdateHeader();
         void Play();
         void HandleCollisions();
+        void SpawnFruit();
         std::string GetGameTime();
 
     private:

@@ -4,8 +4,7 @@
 #include <ncurses.h>
 
 SnakeFruit::SnakeFruit() :
-    target_(nullptr), dead_(false),
-    Fruit('f', 0, COLOR_RED, 0, 0),
+    Fruit('f', 5, COLOR_RED, 0, 0),
     Snake('E', 'e', 0, 0, 0, 0) {}
 
 void SnakeFruit::Init(WindowManager* win) {
@@ -17,7 +16,31 @@ void SnakeFruit::Init(WindowManager* win) {
     segments_[0].y = y_;
 }
 
-// I don't know anything about pathfinding, so this is probably super bad code
+void SnakeFruit::Update(WindowManager* win) {
+    if (grow_) {
+        AddSegment();
+    }
+
+    GotoTarget(win);
+    UpdatePosition(win);
+}
+
+int SnakeFruit::Destroy(WindowManager* win) {
+    win->FPS(win->FPS() - (size_ - 1 ) / 4.0);
+    Erase(win);
+    return GetValue();
+}
+
+void SnakeFruit::EatFruit(Fruit* fruit, WindowManager* win) {
+    Grow(4);
+    score_ += fruit->Destroy(win);
+    win->FPS(win->FPS() + 1);
+}
+
+// ------------------------------------------------
+/*            GIVEN TO STUDENTS                  */
+// ------------------------------------------------
+
 void SnakeFruit::GotoTarget(WindowManager* win) {
     if (!target_)
         return;
@@ -195,32 +218,3 @@ void SnakeFruit::GotoTarget(WindowManager* win) {
     }
 }
 
-void SnakeFruit::Update(WindowManager* win) {
-    // Add a single segment if we are currently growing
-    if (grow_) {
-        AddSegment();
-    }
-
-    // Update velocities if a key was pressed
-    GotoTarget(win);
-    if (dead_)
-        return;
-
-    // Erase the old snake off the screen before we draw its new position
-    Erase(win);
-
-
-    // Update the snake body position.
-    // Each Segment(i+1) = Segment(i), besides the head
-    for (int i = size_ - 2; i >= 0; i--) {
-        segments_[i + 1] = segments_[i];
-    }
-    // Update the snake head position
-    segments_[0].x += vx_;
-    segments_[0].y += vy_;
-    x_ = segments_[0].x;
-    y_ = segments_[0].y;
-
-    // Draw the snake with its new position
-    Snake::Draw(win);
-}

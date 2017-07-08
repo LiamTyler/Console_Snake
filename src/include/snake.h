@@ -3,6 +3,7 @@
 
 #include "include/window_manager.h"
 #include "include/moveable.h"
+#include "include/fruit.h"
 #include <vector>
 
 /* Brief: This struct is just for keeping track of the position of
@@ -28,11 +29,16 @@ class Snake : virtual public Moveable {
     public:
         Snake();
         Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy);
-        virtual bool Update(WindowManager* win, int key_code);
+        virtual void Update(WindowManager* win, int key_code);
         virtual void Draw(WindowManager* win);
         virtual void Erase(WindowManager* win);
+        virtual void EatFruit(Fruit* fruit, WindowManager* win);
         virtual void AddSegment();
+        virtual void UpdatePosition(WindowManager* win);
         virtual void ProcessInput(int key_code);
+        bool InBounds(WindowManager* win);
+        bool BodyContains(int x, int y);
+        bool HitHead(Snake* s);
         char GetHeadSymbol() { return h_symbol_; }
         char GetBodySymbol() { return b_symbol_; }
         void Grow(int g) { grow_ += g; }

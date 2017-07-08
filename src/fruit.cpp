@@ -17,9 +17,8 @@ void Fruit::Init(WindowManager* win) {
     Draw(win);
 }
 
-void Fruit::Destroy(WindowManager* win, Snake* snake) {
-    snake->Score(snake->Score() + GetValue());
-    snake->Grow(7);
+int Fruit::Destroy(WindowManager* win) {
+    return GetValue();
 }
 
 void Fruit::Draw(WindowManager* win) {
