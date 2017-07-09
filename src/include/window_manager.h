@@ -17,13 +17,12 @@ class WindowManager {
         void PrintChar(char ch, int x, int y);
         void ClearChar(int x, int y);
         void PrintString(std::string s, int x, int y);
-        int GetChar(int x, int y);
+        char GetChar(int x, int y);
         void ClearScreen();
         int GetInput();  // returns the key code of a key pressed
         void StartFrame();
         void EndFrame();
         void Pause();
-        void FlipSpeed();
         void StartColor(unsigned color);
         void StopColor(unsigned color);
 
@@ -47,7 +46,6 @@ class WindowManager {
         int bborder_;
         WINDOW* window_;
         double fps_;
-        bool flip_;
 
         std::chrono::steady_clock::time_point start_;
 };

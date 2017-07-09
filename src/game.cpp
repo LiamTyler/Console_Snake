@@ -10,7 +10,7 @@ Game::Game() {
     win_ = nullptr;
     snake_ = nullptr;
     fruit_ = nullptr;
-    sf_ = nullptr;
+    snake_fruit_ = nullptr;
 }
 
 Game::~Game() {
@@ -20,8 +20,8 @@ Game::~Game() {
         delete snake_;
     if (fruit_)
         delete fruit_;
-    if (sf_)
-        delete sf_;
+    if (snake_fruit_)
+        delete snake_fruit_;
 }
 
 void Game::Init() {
@@ -33,10 +33,10 @@ void Game::Init() {
     snake_ = new Snake();
     snake_->Draw(win_);
 
-    sf_ = new SnakeFruit();
-    sf_->SetTarget(fruit_);
-    sf_->Init(win_);
-    sf_->Snake::Draw(win_);
+    snake_fruit_ = new SnakeFruit();
+    snake_fruit_->SetTarget(fruit_);
+    snake_fruit_->Init(win_);
+    snake_fruit_->Snake::Draw(win_);
 
     // Spawn fruit after snakes are initialized
     SpawnFruit();
@@ -62,8 +62,8 @@ void Game::SpawnFruit() {
             fruit_ = nullptr;
     }
     fruit_->Init(win_);
-    if (sf_)
-        sf_->SetTarget(fruit_);
+    if (snake_fruit_)
+        snake_fruit_->SetTarget(fruit_);
 }
 
 // Return a string of the time in seconds since the game started (max at 9999)
@@ -75,8 +75,8 @@ string Game::GetGameTime() {
 
 void Game::UpdateHeader() {
     win_->PrintString("Player Score: " + to_string(snake_->Score()), 1, 1);
-    if (sf_)
-        win_->PrintString("SnakeFruit Score: " + to_string(sf_->Score()), 20, 1);
+    if (snake_fruit_)
+        win_->PrintString("SnakeFruit Score: " + to_string(snake_fruit_->Score()), 20, 1);
     else
         win_->PrintString("                      ", 20, 1);
     win_->PrintString("Time: " + GetGameTime(), win_->ScreenWidth() - 11, 1);
@@ -94,15 +94,12 @@ void Game::Play() {
             case 'p':
                 win_->Pause();
                 break;
-            case 'l':
-                win_->FlipSpeed();
-                break;
             default:
                 UpdateHeader();
                 fruit_->Update(win_);
-                if (sf_)
-                    sf_->Update(win_);
-                // snake_->Update(win_, key_code);
+                if (snake_fruit_)
+                    snake_fruit_->Update(win_);
+                snake_->Update(win_, key_code);
                 HandleCollisions();
                 win_->EndFrame();
         }
@@ -110,14 +107,14 @@ void Game::Play() {
 }
 
 void Game::HandleCollisions() {
-    if (sf_) {
-        if (sf_->Dead()) {
-            snake_->EatFruit(sf_, win_);
-            delete sf_;
-            sf_ = nullptr;
+    if (snake_fruit_) {
+        if (snake_fruit_->Dead()) {
+            snake_->EatFruit(snake_fruit_, win_);
+            delete snake_fruit_;
+            snake_fruit_ = nullptr;
         } else {
-            if (fruit_->X() == sf_->X() && fruit_->Y() == sf_->Y()) {
-                sf_->EatFruit(fruit_, win_);
+            if (fruit_->X() == snake_fruit_->X() && fruit_->Y() == snake_fruit_->Y()) {
+                snake_fruit_->EatFruit(fruit_, win_);
                 SpawnFruit();
             }
         }
@@ -130,15 +127,15 @@ void Game::HandleCollisions() {
         SpawnFruit();
         snake_->Draw(win_);
     }
-    if (snake_->HitHead(sf_)) {
-        snake_->EatFruit(sf_, win_);
-        delete sf_;
-        sf_ = nullptr;
+    if (snake_->HitHead(snake_fruit_)) {
+        snake_->EatFruit(snake_fruit_, win_);
+        delete snake_fruit_;
+        snake_fruit_ = nullptr;
     }
 
     if (!snake_->InBounds(win_) ||
         snake_->BodyContains(sx, sy) ||
-        (sf_ && sf_->BodyContains(sx, sy))) {
+        (snake_fruit_ && snake_fruit_->BodyContains(sx, sy))) {
         gameover_ = true;
     }
 }

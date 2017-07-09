@@ -3,7 +3,7 @@
 
 using namespace std;
 
-WindowManager::WindowManager() : WindowManager(24, 100, 25) {}
+WindowManager::WindowManager() : WindowManager(24, 100, 12) {}
 
 WindowManager::WindowManager(int height, int width, double fps) {
     screen_w_ = width;
@@ -13,7 +13,6 @@ WindowManager::WindowManager(int height, int width, double fps) {
     tborder_ = 2;  // Leave room for the header
     bborder_ = height;
     fps_ = fps;
-    flip_ = false;
     initscr();
     window_ = newwin(height, width, 0, 0);
     InitColors();
@@ -60,19 +59,7 @@ void WindowManager::Pause() {
     while (wgetch(window_) != 'p');
 }
 
-void WindowManager::FlipSpeed() {
-    if (flip_) {
-        fps_ = 45;
-    } else {
-        fps_ = 5;
-    }
-    flip_ = !flip_;
-}
-
-/* Change the color of whatever you print until 'StopColor' is called.
- * NOTE: Dont call this multiple times. Use a color, stop it, and then
- *       use your next color.
- */
+// Change the color of whatever you print until 'StopColor' is called.
 void WindowManager::StartColor(unsigned color) {
     // use given color as foreground color,
     // and use black as background
@@ -80,6 +67,7 @@ void WindowManager::StartColor(unsigned color) {
     wattron(window_, COLOR_PAIR(color) | A_BOLD);
 }
 
+// Stops whatever color you started earlier
 void WindowManager::StopColor(unsigned color) {
     wattroff(window_, COLOR_PAIR(color) | A_BOLD);
 }
@@ -100,7 +88,8 @@ void WindowManager::PrintString(string s, int x, int y) {
     wprintw(window_, "%s", s.c_str());
 }
 
-int WindowManager::GetChar(int x, int y) {
+// Return whatever character is on the screen at row Y, col X
+char WindowManager::GetChar(int x, int y) {
     return mvwinch(window_, y, x) & A_CHARTEXT;
 }
 
@@ -108,14 +97,21 @@ void WindowManager::ClearScreen() {
     wclear(window_);
 }
 
+// Get the key code of a key pressed (if any)
 int WindowManager::GetInput() {
     return wgetch(window_);
 }
 
+// Start the frame timer
 void WindowManager::StartFrame() {
     start_ = chrono::steady_clock::now();
 }
 
+// Given that the timer was started with 'StartFrame', this is sort of 'pause'
+// a frame until it reaches however much time was supposed to pass
+// I.e., if a game runs at 10 frames per second (fps), it will pause it until
+// the current frame has been running for 1/10th of a second.
+// Note: This isn't actually a super accurate/good way to do this
 void WindowManager::EndFrame() {
     wrefresh(window_);
     fflush(stdout);

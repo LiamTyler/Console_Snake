@@ -28,7 +28,7 @@ class Game {
         WindowManager* win_;
         Snake* snake_;
         Fruit* fruit_;
-        SnakeFruit* sf_;
+        SnakeFruit* snake_fruit_;
         bool gameover_;
         int score_;
 

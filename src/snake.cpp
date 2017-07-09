@@ -51,12 +51,14 @@ void Snake::ProcessInput(int key_code) {
     }
 }
 
+// Erase the snake off the screen
 void Snake::Erase(WindowManager* win) {
     for (int i = 0; i < size_; i++) {
         win->PrintChar(' ', segments_[i].x, segments_[i].y);
     }
 }
 
+// Draw the snake onto the given window
 void Snake::Draw(WindowManager* win) {
     win->PrintChar(h_symbol_, segments_[0].x, segments_[0].y);
     for (int i = 1; i < size_; i++) {
@@ -64,11 +66,13 @@ void Snake::Draw(WindowManager* win) {
     }
 }
 
+// Defines what happens when a snake eats a fruit
 void Snake::EatFruit(Fruit* fruit, WindowManager* win) {
     Grow(4);
     score_ += fruit->Destroy(win);
 }
 
+// Adds a segment (grows the snake by 1)
 void Snake::AddSegment() {
     segments_.push_back(segments_[size_ - 1]);
     grow_--;
@@ -129,6 +133,7 @@ bool Snake::BodyContains(int x, int y) {
     return false;
 }
 
+// Main update function
 void Snake::Update(WindowManager* win, int key_code) {
     // Add a single segment if we are currently growing
     if (grow_) {
