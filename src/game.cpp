@@ -1,16 +1,14 @@
 #include "include/game.h"
 #include <string>
 #include <algorithm>
-#include "include/moving_fruit.h"
-#include "include/snake_fruit.h"
 
 using namespace std;
 
 Game::Game() {
     win_ = nullptr;
     snake_ = nullptr;
-    fruit_ = nullptr;
-    snake_fruit_ = nullptr;
+    // TODO(partA): initialze your Fruit pointer
+    // TODO(partD): initialze your SnakeFruit pointer
 }
 
 Game::~Game() {
@@ -18,10 +16,8 @@ Game::~Game() {
         delete win_;
     if (snake_)
         delete snake_;
-    if (fruit_)
-        delete fruit_;
-    if (snake_fruit_)
-        delete snake_fruit_;
+    // TODO(partA): delete your Fruit pointer
+    // TODO(partD): delete your SnakeFruit pointer
 }
 
 void Game::Init() {
@@ -33,10 +29,8 @@ void Game::Init() {
     snake_ = new Snake();
     snake_->Draw(win_);
 
-    snake_fruit_ = new SnakeFruit();
-    snake_fruit_->SetTarget(fruit_);
-    snake_fruit_->Init(win_);
-    snake_fruit_->Snake::Draw(win_);
+    // TODO(partD): Create your SnakeFruit, set its target,
+    //              initialize it, and draw it
 
     // Spawn fruit after snakes are initialized
     SpawnFruit();
@@ -46,24 +40,27 @@ void Game::Init() {
     start_time_ = chrono::steady_clock::now();
 }
 
+// TODO: See game.h for the enumeration of fruits
 void Game::SpawnFruit() {
-    if (fruit_)
-        delete fruit_;
-    int f = rand() % TOTAL_FRUITS;
-    // f = 0;
-    switch(f) {
+    // TODO(partA): If there is a fruit existing, delete it
+
+    // TODO(partB): Randomly select which fruit to spawn
+    int r = PLAIN;
+    switch(r) {
         case PLAIN:
-            fruit_ = new Fruit();
+            // TODO(partA): Update the pointer to a new Fruit object
             break;
-        case MOVING:
-            fruit_ = new MovingFruit();
-            break;
+        // TODO(partB): Add in your moving fruit as an option
         default:
-            fruit_ = nullptr;
+            // TODO(partA): Safe programming, uncomment this
+            // fruit_ = nullptr;
+            break;
     }
-    fruit_->Init(win_);
-    if (snake_fruit_)
-        snake_fruit_->SetTarget(fruit_);
+
+    // TODO(partA): Initialize your newly created fruit
+
+    // TODO(partD): Set the SnakeFruit to target the new fruit
+    //              if a snake fruit exists
 }
 
 // Return a string of the time in seconds since the game started (max at 9999)
@@ -75,10 +72,13 @@ string Game::GetGameTime() {
 
 void Game::UpdateHeader() {
     win_->PrintString("Player Score: " + to_string(snake_->Score()), 1, 1);
+    // TODO(partD): Uncomment this
+    /*
     if (snake_fruit_)
         win_->PrintString("SnakeFruit Score: " + to_string(snake_fruit_->Score()), 20, 1);
     else
         win_->PrintString("                      ", 20, 1);
+    */
     win_->PrintString("Time: " + GetGameTime(), win_->ScreenWidth() - 11, 1);
     win_->PrintString("FPS: " + to_string((int) win_->FPS()), win_->ScreenWidth() - 21, 1);
 }
@@ -96,9 +96,9 @@ void Game::Play() {
                 break;
             default:
                 UpdateHeader();
-                fruit_->Update(win_);
-                if (snake_fruit_)
-                    snake_fruit_->Update(win_);
+                // TODO(partA): Call the fruit's update function
+                // TODO(partD): If there is a snake fruit, call its
+                //              update function
                 snake_->Update(win_, key_code);
                 HandleCollisions();
                 win_->EndFrame();
@@ -107,6 +107,8 @@ void Game::Play() {
 }
 
 void Game::HandleCollisions() {
+    // TODO(partD): Uncomment this
+    /*
     if (snake_fruit_) {
         if (snake_fruit_->Dead()) {
             snake_->EatFruit(snake_fruit_, win_);
@@ -119,23 +121,28 @@ void Game::HandleCollisions() {
             }
         }
     }
+    */
 
     int sx = snake_->X();
     int sy = snake_->Y();
-    if (fruit_->X() == sx && fruit_->Y() == sy) {
-        snake_->EatFruit(fruit_, win_);
-        SpawnFruit();
-        snake_->Draw(win_);
-    }
+    // TODO(partA): Check to see if the fruit and snake collide. If so,
+    //              call the snake's eat fruit method, spawn a new fruit,
+    //              and redraw the snake
+    //
+    
+    // TODO(partD): Uncomment this
+    /*
     if (snake_->HitHead(snake_fruit_)) {
         snake_->EatFruit(snake_fruit_, win_);
         delete snake_fruit_;
         snake_fruit_ = nullptr;
     }
+    */
 
+    // TODO(partD): Add in the following check: "If the snake fruit is alive,
+    //              and its body contains the snake's head, gameover"
     if (!snake_->InBounds(win_) ||
-        snake_->BodyContains(sx, sy) ||
-        (snake_fruit_ && snake_fruit_->BodyContains(sx, sy))) {
+        snake_->BodyContains(sx, sy)) {
         gameover_ = true;
     }
 }

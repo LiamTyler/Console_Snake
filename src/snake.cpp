@@ -1,11 +1,13 @@
 #include "include/snake.h"
-#include <iostream>
 
 Snake::Snake() : Snake('O', 'o', 1, 10, 1, 0) {}
 
-Snake::Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy) :
-    Moveable(x, y, vx, vy) {
+Snake::Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy) {
 
+    x_ = x;
+    y_ = y;
+    vx_ = vx;
+    vy_ = vy;
     score_ = 0;
     h_symbol_ = head_symbol;
     b_symbol_ = body_symbol;
@@ -67,10 +69,13 @@ void Snake::Draw(WindowManager* win) {
 }
 
 // Defines what happens when a snake eats a fruit
+// TODO(partA): Uncomment this
+/*
 void Snake::EatFruit(Fruit* fruit, WindowManager* win) {
     Grow(4);
     score_ += fruit->Destroy(win);
 }
+*/
 
 // Adds a segment (grows the snake by 1)
 void Snake::AddSegment() {

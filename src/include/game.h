@@ -3,8 +3,6 @@
 
 #include "include/window_manager.h"
 #include "include/snake.h"
-#include "include/fruit.h"
-#include "include/snake_fruit.h"
 #include <chrono>
 
 enum {
@@ -27,8 +25,8 @@ class Game {
     private:
         WindowManager* win_;
         Snake* snake_;
-        Fruit* fruit_;
-        SnakeFruit* snake_fruit_;
+        // TODO(partA): Add in the fruit_ member pointer
+        // TODO(partD): Add in the snake_fruit_ member pointer
         bool gameover_;
         int score_;
 

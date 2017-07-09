@@ -2,8 +2,6 @@
 #define SRC_INCLUDE_SNAKE_H_
 
 #include "include/window_manager.h"
-#include "include/moveable.h"
-#include "include/fruit.h"
 #include <vector>
 
 /* Brief: This struct is just for keeping track of the position of
@@ -25,14 +23,15 @@ typedef struct vec2 {
 
 /* Brief: Snake
  */
-class Snake : virtual public Moveable {
+class Snake {
     public:
         Snake();
         Snake(char head_symbol, char body_symbol, int x, int y, int vx, int vy);
         virtual void Update(WindowManager* win, int key_code);
         virtual void Draw(WindowManager* win);
         virtual void Erase(WindowManager* win);
-        virtual void EatFruit(Fruit* fruit, WindowManager* win);
+        // TODO(partA): Uncomment this
+        // virtual void EatFruit(Fruit* fruit, WindowManager* win);
         virtual void AddSegment();
         virtual void UpdatePosition(WindowManager* win);
         virtual void ProcessInput(int key_code);
@@ -45,7 +44,17 @@ class Snake : virtual public Moveable {
         int Score() { return score_; }
         void Score(int s) { score_ = s; }
 
+
+        int X() { return x_; }
+        int Y() { return y_; }
+        int VX() { return vx_; }
+        int VY() { return vy_; }
+
     protected:
+        int x_;
+        int y_;
+        int vx_;
+        int vy_;
         char h_symbol_;
         char b_symbol_;
         int grow_;
